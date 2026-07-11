@@ -8,7 +8,7 @@ import { useCallback } from 'react'
 import { useTraffic } from '../context/TrafficContext'
 import axios from 'axios'
 
-const API_BASE = '/api'
+const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
 export function useSimulation() {
   const { state, dispatch, speakAlert } = useTraffic()

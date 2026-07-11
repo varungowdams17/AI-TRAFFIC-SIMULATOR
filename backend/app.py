@@ -19,8 +19,13 @@ def create_app():
     app.config['SECRET_KEY'] = 'aai-traffic-simulator-vtu-2024'
     app.config['DATABASE'] = os.path.join(os.path.dirname(__file__), 'database', 'traffic.db')
 
-    # Allow React dev server
-    CORS(app, origins=['http://localhost:3000', 'http://127.0.0.1:3000'])
+    # Allow React dev server and deployed frontend origin
+    allowed_origins = ['http://localhost:3000', 'http://127.0.0.1:3000']
+    frontend_url = os.getenv('FRONTEND_URL')
+    if frontend_url:
+        allowed_origins.append(frontend_url)
+
+    CORS(app, origins=allowed_origins)
 
     with app.app_context():
         init_db(app)
@@ -46,10 +51,13 @@ def create_app():
 
 if __name__ == '__main__':
     app = create_app()
+    port = int(os.getenv('PORT', 5000))
+    debug = os.getenv('FLASK_DEBUG', 'false').lower() == 'true'
+
     print("=" * 60)
     print("  AI Traffic Simulator – Backend")
-    print("  http://localhost:5000")
-    print("  Health: http://localhost:5000/api/health")
+    print(f"  http://localhost:{port}")
+    print(f"  Health: http://localhost:{port}/api/health")
     print("=" * 60)
     # use_reloader=False prevents double-startup issues
-    app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False)
+    app.run(host='0.0.0.0', port=port, debug=debug, use_reloader=False)

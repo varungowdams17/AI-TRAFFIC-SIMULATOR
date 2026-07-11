@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: ai-traffic-simulator-backend
+    env: python
+    region: oregon
+    branch: main
+    buildCommand: cd backend && pip install -r requirements.txt
+    startCommand: cd backend && gunicorn app:app
+    envVars:
+      - key: FRONTEND_URL
+        value: https://ai-traffic-simulator-frontend.onrender.com
+
+  - type: static
+    name: ai-traffic-simulator-frontend
+    env: static
+    region: oregon
+    branch: main
+    buildCommand: cd frontend && npm install && npm run build
+    publishPath: frontend/dist
+    envVars:
+      - key: VITE_API_BASE
+        value: https://ai-traffic-simulator-backend.onrender.com
