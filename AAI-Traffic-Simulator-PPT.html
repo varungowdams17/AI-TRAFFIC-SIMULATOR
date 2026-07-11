@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>AAI Traffic Simulator – VTU ADA Mini Project PPT</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0a0e1a;color:#f1f5f9;overflow:hidden}
+.deck{width:100vw;height:100vh;position:relative}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;align-items:center;padding:60px;opacity:0;transition:opacity .4s}
+.slide.active{display:flex;opacity:1}
+/* nav */
+.nav{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);display:flex;gap:12px;z-index:100;align-items:center}
+.nav button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;padding:10px 24px;border-radius:50px;cursor:pointer;font-size:14px;font-weight:600;transition:all .2s}
+.nav button:hover{background:rgba(14,165,233,.3);border-color:#0ea5e9}
+.slide-counter{color:#64748b;font-size:13px;min-width:60px;text-align:center}
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#0ea5e9,#8b5cf6);transition:width .4s;z-index:100}
+/* slide number badge */
+.slide-num{position:fixed;top:20px;right:28px;font-size:12px;color:#475569;font-weight:600}
+/* ── SLIDE STYLES ── */
+.tag{display:inline-block;padding:6px 16px;border-radius:50px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px}
+.tag-blue{background:rgba(14,165,233,.15);color:#38bdf8;border:1px solid rgba(14,165,233,.3)}
+.tag-green{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+.tag-red{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3)}
+.tag-purple{background:rgba(139,92,246,.15);color:#a78bfa;border:1px solid rgba(139,92,246,.3)}
+.tag-yellow{background:rgba(245,158,11,.15);color:#fbbf24;border:1px solid rgba(245,158,11,.3)}
+h1{font-size:clamp(28px,4vw,52px);font-weight:900;line-height:1.1;text-align:center;margin-bottom:16px}
+h2{font-size:clamp(22px,3vw,38px);font-weight:800;text-align:center;margin-bottom:14px}
+h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.grad{background:linear-gradient(135deg,#38bdf8,#a78bfa,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub{color:#94a3b8;font-size:clamp(14px,1.8vw,20px);text-align:center;max-width:700px;line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:900px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;width:100%;max-width:960px}
+.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;width:100%;max-width:960px}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px}
+.card-blue{border-color:rgba(14,165,233,.3);background:rgba(14,165,233,.06)}
+.card-green{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.06)}
+.card-red{border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.06)}
+.card-purple{border-color:rgba(139,92,246,.3);background:rgba(139,92,246,.06)}
+.card-yellow{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.06)}
+.icon{font-size:32px;margin-bottom:10px}
+.mono{font-family:'Courier New',monospace;font-size:13px;color:#fbbf24;background:rgba(0,0,0,.3);padding:3px 8px;border-radius:6px}
+ul{list-style:none;space-y:6px}
+ul li{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:15px;color:#cbd5e1}
+ul li:before{content:"▸ ";color:#38bdf8}
+.big-num{font-size:42px;font-weight:900;line-height:1}
+.divider{width:60px;height:3px;background:linear-gradient(90deg,#0ea5e9,#8b5cf6);border-radius:2px;margin:16px auto}
+/* bg decorations */
+.bg-glow{position:absolute;border-radius:50%;filter:blur(80px);opacity:.12;pointer-events:none}
+.bg1{width:400px;height:400px;background:#0ea5e9;top:-100px;right:-100px}
+.bg2{width:300px;height:300px;background:#8b5cf6;bottom:-80px;left:-80px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{background:rgba(14,165,233,.15);color:#38bdf8;padding:10px 14px;text-align:left;font-weight:700}
+td{padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.06);color:#cbd5e1}
+tr:hover td{background:rgba(255,255,255,.03)}
+.flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
+.flow-box{background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.3);border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;color:#38bdf8}
+.arrow{color:#475569;font-size:20px}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<div class="slide-num" id="snum"></div>
+<div class="deck" id="deck">
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 1 — TITLE
+══════════════════════════════════════════════════════════ -->
+<div class="slide" id="s1">
+  <div class="bg-glow bg1"></div><div class="bg-glow bg2"></div>
+  <div class="tag tag-blue">VTU ADA Mini Project · 2024–25</div>
+  <h1><span class="grad">AAI Traffic Simulator</span></h1>
+  <h2 style="font-size:22px;color:#94a3b8;font-weight:500;margin-bottom:24px">Smart AI-Based Traffic Management System</h2>
+  <div class="divider"></div>
+  <p class="sub">Powered by Dijkstra · Greedy · Priority Queue · Dynamic Programming · Graph Algorithms</p>
+  <div style="margin-top:36px;display:flex;gap:32px;flex-wrap:wrap;justify-content:center">
+    <div style="text-align:center"><div class="big-num grad">7+</div><div style="color:#64748b;font-size:13px;margin-top:4px">ADA Algorithms</div></div>
+    <div style="text-align:center"><div class="big-num grad">6</div><div style="color:#64748b;font-size:13px;margin-top:4px">Vehicle Types</div></div>
+    <div style="text-align:center"><div class="big-num grad">4</div><div style="color:#64748b;font-size:13px;margin-top:4px">Road Directions</div></div>
+    <div style="text-align:center"><div class="big-num grad">100%</div><div style="color:#64748b;font-size:13px;margin-top:4px">Real-time</div></div>
+  </div>
+  <div style="margin-top:40px;color:#475569;font-size:13px;text-align:center">
+    Department of Computer Science &amp; Engineering &nbsp;|&nbsp; [College Name], VTU
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 2 — TEAM
+══════════════════════════════════════════════════════════ -->
+<div class="slide" id="s2">
+  <div class="bg-glow bg1"></div>
+  <div class="tag tag-purple">Our Team</div>
+  <h2>Project Team</h2>
+  <div class="divider"></div>
+  <div class="grid4" style="margin-top:28px">
+    <div class="card" style="text-align:center">
+      <div style="font-size:48px;margin-bottom:12px">👨‍💻</div>
+      <h3 style="font-size:15px">Team Member 1</h3>
+      <p style="color:#64748b;font-size:13px;margin-top:4px">Algorithm Design &amp; Backend</p>
+      <div class="mono" style="margin-top:10px">1XX22CS001</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:48px;margin-bottom:12px">👩‍💻</div>
+      <h3 style="font-size:15px">Team Member 2</h3>
+      <p style="color:#64748b;font-size:13px;margin-top:4px">Frontend &amp; UI/UX</p>
+      <div class="mono" style="margin-top:10px">1XX22CS002</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:48px;margin-bottom:12px">👨‍🔬</div>
+      <h3 style="font-size:15px">Team Member 3</h3>
+      <p style="color:#64748b;font-size:13px;margin-top:4px">Simulation &amp; Testing</p>
+      <div class="mono" style="margin-top:10px">1XX22CS003</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:48px;margin-bottom:12px">👩‍🎓</div>
+      <h3 style="font-size:15px">Team Member 4</h3>
+      <p style="color:#64748b;font-size:13px;margin-top:4px">Documentation &amp; Report</p>
+      <div class="mono" style="margin-top:10px">1XX22CS004</div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:24px;width:100%;max-width:700px;text-align:center;padding:16px">
+    <span style="color:#94a3b8;font-size:14px">
+      <strong style="color:#fff">Guide:</strong> Prof. [Guide Name] &nbsp;|&nbsp;
+      <strong style="color:#fff">Subject:</strong> Analysis &amp; Design of Algorithms (ADA) &nbsp;|&nbsp;
+      <strong style="color:#fff">Sem:</strong> IV
+    </span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 3 — PROBLEM STATEMENT
+══════════════════════════════════════════════════════════ -->
+<div class="slide" id="s3">
+  <div class="bg-glow bg2"></div>
+  <div class="tag tag-red">Problem Statement</div>
+  <h2>Real-World Traffic Problems</h2>
+  <div class="divider"></div>
+  <div class="grid3" style="margin-top:24px">
+    <div class="card card-red"><div class="icon">🚗</div><h3>Traffic Congestion</h3><p style="color:#94a3b8;font-size:13px;margin-top:6px">Vehicles stuck in long queues at intersections during peak hours</p></div>
+    <div class="card card-red"><div class="icon">🚑</div><h3>Ambulance Delays</h3><p style="color:#94a3b8;font-size:13px;margin-top:6px">Emergency vehicles blocked by red signals, costing precious lives</p></div>
+    <div class="card card-red"><div class="icon">⏱️</div><h3>Poor Signal Timing</h3><p style="color:#94a3b8;font-size:13px;margin-top:6px">Fixed timers ignore real-time vehicle density — highly inefficient</p></div>
+    <div class="card card-red"><div class="icon">⛽</div><h3>Fuel Wastage</h3><p style="color:#94a3b8;font-size:13px;margin-top:6px">Vehicles idling at signals waste thousands of litres daily</p></div>
+    <div class="card card-red"><div class="icon">🌫️</div><h3>Air Pollution</h3><p style="color:#94a3b8;font-size:13px;margin-top:6px">Congestion significantly increases CO₂ emissions in cities</p></div>
+    <div class="card card-red"><div class="icon">⚠️</div><h3>Accident Blockage</h3><p style="color:#94a3b8;font-size:13px;margin-top:6px">No automatic rerouting when accidents block roads</p></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 4 — PROPOSED SOLUTION
+══════════════════════════════════════════════════════════ -->
+<div class="slide" id="s4">
+  <div class="bg-glow bg1"></div>
+  <div class="tag tag-green">Proposed Solution</div>
+  <h2>AAI Traffic Simulator</h2>
+  <div class="divider"></div>
+  <div class="grid3" style="margin-top:24px">
+    <div class="card card-blue"><div class="icon">🧠</div><h3>AI Signal Optimization</h3><p style="color:#94a3b8;font-size:13px;margin-top:6px">Greedy Algorithm dynamically assigns green signal to road with highest vehicle density</p></div>
+    <div class="card card-red"><div class="icon">🚨</div><h3>Emergency Priority</h3><p style="color:#94a3b8;font-size:13px;margin-top:6px">Max-Heap Priority Queue gives ambulances &amp; fire trucks immediate green corridor</p></div>
+    <div class="card card-green"><div class="icon">🗺️</div><h3>Smart Routing</h3><p style="color:#94a3b8;font-size:13px;margin-top:6px">Dijkstra's Algorithm finds shortest paths and reroutes around accidents instantly</p></div>
+    <div class="card card-purple"><div class="icon">📊</div><h3>Live Analytics</h3><p style="color:#94a3b8;font-size:13px;margin-top:6px">Real-time dashboard with charts, KPIs, density heatmaps and alert logs</p></div>
+    <div class="card card-yellow"><div class="icon">🔊</div><h3>Voice Alerts</h3><p style="color:#94a3b8;font-size:13px;margin-top:6px">AI voice notifications for emergencies, congestion and system events</p></div>
+    <div class="card card-blue"><div class="icon">🕹️</div><h3>Manual Control</h3><p style="color:#94a3b8;font-size:13px;margin-top:6px">Full manual override — set any signal green, set exact timers, control density</p></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 5 — ALGORITHMS
+══════════════════════════════════════════════════════════ -->
+<div class="slide" id="s5">
+  <div class="bg-glow bg2"></div>
+  <div class="tag tag-blue">ADA Subject Core</div>
+  <h2>Algorithms Implemented</h2>
+  <div class="divider"></div>
+  <div style="width:100%;max-width:900px;margin-top:20px">
+    <table>
+      <thead><tr><th>#</th><th>Algorithm</th><th>Purpose in Traffic System</th><th>Time Complexity</th><th>Space</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>🗺️ <strong>Dijkstra's</strong></td><td>Shortest path routing, accident rerouting</td><td class="mono">O((V+E) log V)</td><td class="mono">O(V)</td></tr>
+        <tr><td>2</td><td>🧠 <strong>Greedy</strong></td><td>Dynamic signal optimization (max density → green)</td><td class="mono">O(n log n)</td><td class="mono">O(1)</td></tr>
+        <tr><td>3</td><td>🚨 <strong>Priority Queue</strong></td><td>Emergency vehicle prioritization (max-heap)</td><td class="mono">O(log n)</td><td class="mono">O(n)</td></tr>
+        <tr><td>4</td><td>📈 <strong>Dynamic Prog.</strong></td><td>Traffic density prediction &amp; signal scheduling</td><td class="mono">O(T × R)</td><td class="mono">O(T × R)</td></tr>
+        <tr><td>5</td><td>🕸️ <strong>Graph BFS/DFS</strong></td><td>Road network modeling, connectivity analysis</td><td class="mono">O(V + E)</td><td class="mono">O(V)</td></tr>
+        <tr><td>6</td><td>📊 <strong>Sorting</strong></td><td>Vehicle priority arrangement (Bubble/Merge/Quick)</td><td class="mono">O(n log n)</td><td class="mono">O(1)</td></tr>
+        <tr><td>7</td><td>🔍 <strong>Searching</strong></td><td>Find nearest low-traffic route (Linear/Binary)</td><td class="mono">O(log n)</td><td class="mono">O(1)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 6 — DIJKSTRA DEEP DIVE
+══════════════════════════════════════════════════════════ -->
+<div class="slide" id="s6">
+  <div class="bg-glow bg1"></div>
+  <div class="tag tag-blue">Algorithm Deep Dive</div>
+  <h2>Dijkstra's Shortest Path</h2>
+  <div class="divider"></div>
+  <div class="grid2" style="margin-top:20px;max-width:900px">
+    <div>
+      <div class="card card-blue" style="margin-bottom:16px">
+        <h3>How it works</h3>
+        <ul style="margin-top:10px">
+          <li>Initialize dist[source]=0, all others=∞</li>
+          <li>Extract minimum distance unvisited node</li>
+          <li>Relax all neighbors: if shorter path found, update</li>
+          <li>Mark node visited, repeat until destination reached</li>
+          <li>Reconstruct path using predecessor array</li>
+        </ul>
+      </div>
+      <div class="card card-green">
+        <h3>Use in our project</h3>
+        <ul style="margin-top:10px">
+          <li>Emergency vehicle routing (fastest path)</li>
+          <li>Accident rerouting (avoid blocked roads)</li>
+          <li>Alternate route calculation</li>
+          <li>City road network: 8 nodes, 11 edges</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;gap:12px">
+      <h3>City Road Graph</h3>
+      <svg viewBox="0 0 380 280" style="width:100%;flex:1">
+        <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#38bdf8"/></marker></defs>
+        <!-- edges -->
+        <line x1="60" y1="60" x2="180" y2="45" stroke="#1e3a5f" stroke-width="2"/>
+        <line x1="60" y1="60" x2="60" y2="160" stroke="#1e3a5f" stroke-width="2"/>
+        <line x1="180" y1="45" x2="300" y2="60" stroke="#1e3a5f" stroke-width="2"/>
+        <line x1="180" y1="45" x2="180" y2="160" stroke="#1e3a5f" stroke-width="2"/>
+        <line x1="300" y1="60" x2="300" y2="160" stroke="#1e3a5f" stroke-width="2"/>
+        <line x1="60" y1="160" x2="180" y2="160" stroke="#1e3a5f" stroke-width="2"/>
+        <line x1="60" y1="160" x2="120" y2="240" stroke="#1e3a5f" stroke-width="2"/>
+        <line x1="180" y1="160" x2="300" y2="160" stroke="#1e3a5f" stroke-width="2"/>
+        <line x1="180" y1="160" x2="240" y2="240" stroke="#1e3a5f" stroke-width="2"/>
+        <line x1="300" y1="160" x2="240" y2="240" stroke="#1e3a5f" stroke-width="2"/>
+        <line x1="120" y1="240" x2="240" y2="240" stroke="#1e3a5f" stroke-width="2"/>
+        <!-- shortest path highlight -->
+        <line x1="60" y1="60" x2="180" y2="45" stroke="#22c55e" stroke-width="3"/>
+        <line x1="180" y1="45" x2="180" y2="160" stroke="#22c55e" stroke-width="3"/>
+        <line x1="180" y1="160" x2="300" y2="160" stroke="#22c55e" stroke-width="3"/>
+        <!-- nodes -->
+        <circle cx="60" cy="60" r="18" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+        <text x="60" y="55" fill="white" font-size="9" text-anchor="middle" font-weight="bold">Home</text>
+        <text x="60" y="67" fill="#38bdf8" font-size="8" text-anchor="middle">A</text>
+        <circle cx="180" cy="45" r="18" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+        <text x="180" y="40" fill="white" font-size="9" text-anchor="middle" font-weight="bold">School</text>
+        <text x="180" y="52" fill="#38bdf8" font-size="8" text-anchor="middle">B</text>
+        <circle cx="300" cy="60" r="18" fill="#0f172a" stroke="#64748b" stroke-width="2"/>
+        <text x="300" y="55" fill="white" font-size="9" text-anchor="middle">Hosp.</text>
+        <text x="300" y="67" fill="#64748b" font-size="8" text-anchor="middle">C</text>
+        <circle cx="60" cy="160" r="18" fill="#0f172a" stroke="#64748b" stroke-width="2"/>
+        <text x="60" y="155" fill="white" font-size="9" text-anchor="middle">Market</text>
+        <text x="60" y="167" fill="#64748b" font-size="8" text-anchor="middle">D</text>
+        <circle cx="180" cy="160" r="18" fill="#0f172a" stroke="#22c55e" stroke-width="2"/>
+        <text x="180" y="155" fill="white" font-size="9" text-anchor="middle">Center</text>
+        <text x="180" y="167" fill="#22c55e" font-size="8" text-anchor="middle">E</text>
+        <circle cx="300" cy="160" r="22" fill="#0f172a" stroke="#22c55e" stroke-width="3"/>
+        <text x="300" y="155" fill="white" font-size="9" text-anchor="middle">Airport</text>
+        <text x="300" y="167" fill="#22c55e" font-size="8" text-anchor="middle">F ★</text>
+        <circle cx="120" cy="240" r="18" fill="#0f172a" stroke="#64748b" stroke-width="2"/>
+        <text x="120" y="244" fill="white" font-size="9" text-anchor="middle">Park</text>
+        <circle cx="240" cy="240" r="18" fill="#0f172a" stroke="#64748b" stroke-width="2"/>
+        <text x="240" y="244" fill="white" font-size="9" text-anchor="middle">Station</text>
+        <!-- weight labels -->
+        <text x="120" y="42" fill="#fbbf24" font-size="10" text-anchor="middle">4</text>
+        <text x="245" y="52" fill="#fbbf24" font-size="10" text-anchor="middle">5</text>
+        <text x="183" y="105" fill="#fbbf24" font-size="10" text-anchor="middle">3</text>
+        <text x="245" y="165" fill="#fbbf24" font-size="10" text-anchor="middle">4</text>
+      </svg>
+      <div style="font-size:12px;color:#64748b;text-align:center">
+        <span style="color:#22c55e">━━</span> Shortest path: Home → School → Center → Airport (dist=11)
+      </div>
+    </div>
+  </div>
+</div>
