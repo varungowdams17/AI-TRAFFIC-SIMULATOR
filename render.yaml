@@ -4,8 +4,9 @@ services:
     env: python
     region: oregon
     branch: main
-    buildCommand: cd backend && pip install -r requirements.txt
-    startCommand: cd backend && gunicorn app:app
+    root: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
     envVars:
       - key: FRONTEND_URL
         value: https://ai-traffic-simulator-frontend.onrender.com
@@ -15,8 +16,9 @@ services:
     env: static
     region: oregon
     branch: main
-    buildCommand: cd frontend && npm install && npm run build
-    publishPath: frontend/dist
+    root: frontend
+    buildCommand: npm install && npm run build
+    publishPath: dist
     envVars:
       - key: VITE_API_BASE
         value: https://ai-traffic-simulator-backend.onrender.com
